@@ -1,0 +1,178 @@
+:root {
+    --bg-color: #030306;
+    --panel-bg: #07070f;
+    --neon-blue: #00f2fe;
+    --neon-red: #ff0055;
+    --neon-green: #39ff14;
+    --text-main: #ffffff;
+    --text-muted: #42425c;
+}
+
+body {
+    margin: 0; padding: 20px;
+    font-family: 'Consolas', 'Segoe UI', monospace;
+    background-color: var(--bg-color); color: var(--text-main);
+    min-height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+    overflow-x: hidden; position: relative;
+    perspective: 1000px; /* Indispensable pour l'effet de profondeur 3D */
+}
+
+/* --- STYLE DE L'ÉCRAN DE CHARGEMENT --- */
+#loader-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #030306;
+    z-index: 9999;
+    display: flex; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+.loader-content {
+    width: 80%; max-width: 400px; text-align: center;
+}
+.loader-terminal-text {
+    font-size: 11px; color: var(--neon-blue); letter-spacing: 2px; margin-bottom: 15px;
+    text-shadow: 0 0 5px var(--neon-blue);
+}
+.loader-bar-container {
+    width: 100%; height: 4px; background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px; overflow: hidden; margin-bottom: 10px;
+}
+.loader-bar-progress {
+    width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-red));
+    box-shadow: 0 0 10px var(--neon-red);
+}
+.loader-percentage {
+    font-size: 14px; font-weight: 900; color: #fff; letter-spacing: 1px;
+}
+
+/* --- AMBIANCE DU SITE --- */
+#digital-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; pointer-events: none; opacity: 0.35; }
+.bg-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 242, 254, 0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 254, 0.01) 1px, transparent 1px); background-size: 40px 40px; z-index: -2; }
+.scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%); background-size: 100% 4px; z-index: -1; pointer-events: none; }
+
+/* Conteneur caché au début pendant le chargement */
+.main-container {
+    width: 100%; max-width: 600px;
+    display: flex; flex-direction: column; gap: 20px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.main-container.visible { opacity: 1; transform: translateY(0); }
+
+/* Panneau Central avec support 3D */
+.central-panel {
+    background: rgba(7, 7, 15, 0.85); backdrop-filter: blur(12px);
+    border: 1px solid #111124; border-radius: 4px; padding: 30px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8); position: relative;
+    transform-style: preserve-3d; /* Permet aux éléments enfants d'avoir du relief en 3D */
+    transition: transform 0.1s ease-out;
+}
+.central-panel::before { content: ''; position: absolute; top: -1px; left: -1px; width: 25px; height: 25px; border-top: 2px solid var(--neon-blue); border-left: 2px solid var(--neon-blue); }
+.central-panel::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 25px; height: 25px; border-bottom: 2px solid var(--neon-red); border-right: 2px solid var(--neon-red); }
+
+.profile-section { text-align: center; margin-bottom: 30px; transform: translateZ(30px); /* Sort l'avatar et le nom en relief */ }
+.avatar-wrapper { 
+    width: 75px; 
+    height: 75px; 
+    background: #0b0b14; 
+    border: 1px solid #19192e; 
+    clip-path: polygon(15% 0%, 100% 0%, 100% 85%, 85% 100%, 0% 100%, 0% 15%); 
+    display: inline-flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-bottom: 15px;
+    overflow: hidden; /* <--- AJOUTE CETTE LIGNE SI ELLE N'Y EST PAS */
+}
+.default-avatar { font-size: 30px; color: var(--neon-blue); filter: drop-shadow(0 0 8px var(--neon-blue)); }
+.profile-section h1 { margin: 0; font-size: 40px; font-weight: 900; letter-spacing: 6px; color: #fff; text-shadow: 2px 2px var(--neon-red), -2px -2px var(--neon-blue); }
+.tagline { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+.pulse-dot { width: 6px; height: 6px; background-color: var(--neon-green); border-radius: 50%; animation: pulse 1.5s infinite; }
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.5); }
+    70% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 0 6px rgba(57, 255, 20, 0); }
+    100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+.links-container { display: flex; flex-direction: column; gap: 14px; transform: translateZ(20px); }
+.link-btn {
+    display: flex; align-items: center; padding: 16px 20px; text-decoration: none; color: #fff; font-weight: 700;
+    background: rgba(255, 255, 255, 0.005); border: 1px solid #101022; position: relative; transition: all 0.2s ease, border-color 0.25s;
+    clip-path: polygon(0 0, 96% 0, 100% 35%, 100% 100%, 4% 100%, 0 65%);
+}
+.game-icon { width: 26px; height: 26px; object-fit: contain; margin-right: 15px; }
+.ut-logo-fix { filter: invert(1); }
+.link-btn .btn-text { flex-grow: 1; letter-spacing: 1.5px; font-size: 13px; }
+
+.btn-cs2:hover { border-color: var(--neon-blue); background: rgba(0, 242, 254, 0.04); box-shadow: 0 0 20px rgba(0, 242, 254, 0.2); text-shadow: 0 0 5px #fff; transform: translateX(3px); }
+.btn-ut:hover { border-color: var(--neon-red); background: rgba(255, 0, 85, 0.04); box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); text-shadow: 0 0 5px #fff; transform: translateX(3px); }
+.btn-cs16:hover { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.04); box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); transform: translateX(3px); }
+
+.arrow { opacity: 0.3; font-size: 12px; }
+.status-badge { font-size: 9px; color: var(--neon-green); padding: 3px 6px; border: 1px solid var(--neon-green); background: rgba(57, 255, 20, 0.05); font-weight: 900; }
+.section-title { font-size: 11px; letter-spacing: 3px; color: var(--text-muted); margin: 15px 0 5px 2px; }
+.section-title i { color: var(--neon-red); margin-right: 6px; }
+
+/* Grille de cartes vidéo */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; max-width: 500px; margin: 0 auto; width: 100%; }
+.content-card {
+    text-decoration: none; color: inherit; background: #05050b; border: 1px solid #0f0f1c;
+    transition: border-color 0.25s, box-shadow 0.25s; display: block; border-radius: 6px;
+    transform-style: preserve-3d;
+}
+.thumbnail-placeholder { width: 100%; height: 0; padding-top: 56.25%; position: relative; border-bottom: 1px solid #0f0f1c; border-top-left-radius: 6px; border-top-right-radius: 6px; overflow: hidden; }
+.play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(15px); width: 36px; height: 36px; background: var(--bg-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 10px; color: #fff; border: 1px solid rgba(255,255,255,0.15); transition: all 0.2s; z-index: 2; }
+.content-card:hover .play-btn { background: var(--neon-red); border-color: var(--neon-red); box-shadow: 0 0 12px var(--neon-red); transform: translate(-50%, -50%) translateZ(20px) scale(1.08); }
+
+.card-cs2:hover { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 242, 254, 0.15); }
+.card-ut:hover { border-color: var(--neon-red); box-shadow: 0 0 15px rgba(255, 0, 85, 0.15); }
+
+.card-info { padding: 12px; transform: translateZ(10px); }
+.card-info h3 { margin: 0; font-size: 13px; font-weight: 700; }
+.card-info p { margin: 4px 0 0 0; font-size: 10px; color: var(--text-muted); }
+
+@media (max-width: 480px) { .profile-section h1 { font-size: 32px; } .central-panel { padding: 20px; } .link-btn .btn-text { font-size: 11px; } }
+/* Style pour l'avatar Steam centré */
+.steam-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Remplit la boîte sans déformer l'image */
+    object-position: center; /* force l'image à se centrer horizontalement et verticalement */
+    filter: contrast(1.1) brightness(1.05);
+    transition: transform 0.3s ease;
+}
+/* Bouton d'entrée Cyberpunk */
+.cyber-enter-btn {
+    font-size: 13px;
+    color: var(--neon-green);
+    letter-spacing: 3px;
+    margin-top: 20px;
+    cursor: pointer;
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+    animation: textBlink 1.2s infinite;
+    font-weight: bold;
+}
+
+@keyframes textBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* On change le curseur du loader pour faire comprendre que c'est cliquable */
+#loader-screen {
+    cursor: pointer;
+}
+.game-icon { 
+    width: 32px;        /* Augmenté de 26px à 32px */
+    height: 32px;       /* Augmenté de 26px à 32px */
+    object-fit: contain; 
+    margin-right: 15px; 
+}
+/* État Offline pour le badge du serveur */
+.status-badge.offline {
+    color: var(--neon-red);
+    border-color: var(--neon-red);
+    background: rgba(255, 0, 85, 0.05);
+    text-shadow: 0 0 5px rgba(255, 0, 85, 0.3);
+}
