@@ -10,8 +10,8 @@ const myContents = [
         type: "ut",
         title: "Old school Gameplay",
         subtitle: "Fast-paced retro action",
-        link: "https://www.youtube.com/@TON_COMPTE_UT",
-        image: "https://images.alphacoders.com/605/605655.jpg"
+        link: "https://www.youtube.com/watch?v=Z64lDruoAlw",
+        image: "https://img.youtube.com/vi/Z64lDruoAlw/maxresdefault.jpg"
     }
 ];
 
@@ -231,5 +231,3 @@ function checkServerStatus() {
             // Si le fetch échoue (PC éteint, port fermé, pas de connexion)
             statusBadge.innerText = "OFFLINE";
             statusBadge.classList.add("offline");
-        });
-}
