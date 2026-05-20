@@ -2,14 +2,14 @@ const myContents = [
     {
         type: "cs2",
         title: "Pro player Gameplay on tournament",
-        subtitle: "Major & IEM Tournaments",
+        subtitle: "Channel: JoJos (Pro POV gameplay)",
         link: "https://www.youtube.com/watch?v=YqHEjCXx318",
         image: "https://img.youtube.com/vi/YqHEjCXx318/maxresdefault.jpg"
     },
     {
         type: "ut",
         title: "Old school Gameplay",
-        subtitle: "Fast-paced retro action",
+        subtitle: "Old School Gameplay (Jojos)",
         link: "https://www.youtube.com/watch?v=Z64lDruoAlw",
         image: "https://img.youtube.com/vi/Z64lDruoAlw/maxresdefault.jpg"
     }
