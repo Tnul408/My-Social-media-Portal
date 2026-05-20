@@ -3,8 +3,8 @@ const myContents = [
         type: "cs2",
         title: "Pro player Gameplay on tournament",
         subtitle: "Major & IEM Tournaments",
-        link: "https://www.youtube.com/watch?v=KQ509_THDAA",
-        image: "https://img.youtube.com/vi/KQ509_THDAA/maxresdefault.jpg"
+        link: "https://www.youtube.com/watch?v=YqHEjCXx318",
+        image: "https://img.youtube.com/vi/YqHEjCXx318/maxresdefault.jpg"
     },
     {
         type: "ut",
