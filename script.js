@@ -10,7 +10,7 @@ const myContents = [
         type: "ut",
         title: "Old school Gameplay",
         subtitle: "Channel: Old School Gameplay (Jojos)",
-        link: "https://www.youtube.com/watch?v=https://www.youtube.com/watch?v=-V_8VFaXswE",
+        link: "https://www.youtube.com/watch?v=-V_8VFaXswE",
         image: "https://img.youtube.com/vi/V_8VFaXswE/maxresdefault.jpg"
     }
 ];
