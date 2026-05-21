@@ -14,8 +14,8 @@ const myContents = [
         type: "cs2",
         title: "Pro player Gameplay on tournament",
         subtitle: "Channel: JoJos (Pro POV gameplay)",
-        link: "https://www.youtube.com/watch?v=YqHEjCXx318",
-        image: "https://img.youtube.com/vi/YqHEjCXx318/maxresdefault.jpg"
+        link: "https://www.youtube.com/watch?v=svyYpUXCO_o&t",
+        image: "https://img.youtube.com/vi/svyYpUXCO_o&t/maxresdefault.jpg"
     },
 ];
 
