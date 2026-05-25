@@ -21,6 +21,7 @@
 
     <div class="bg-grid"></div>
     <div class="scanlines"></div>
+    <div class="laser-line"></div>
     <canvas id="digital-rain"></canvas>
 
     <div class="main-container" id="main-content">
@@ -54,14 +55,24 @@
                 </a>    
             </div>
 
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="switchTab('all')"><i class="fa-solid fa-border-all"></i> ALL CONTENT</button>
+                <button class="tab-btn" onclick="switchTab('cs2')"><i class="fa-solid fa-fire"></i> CS2 CLIPS</button>
+                <button class="tab-btn" onclick="switchTab('ut')"><i class="fa-solid fa-clock-rotate-left"></i> RETRO REPLAYS</button>
+            </div>
+
             <div class="console-hint">[ Appuyez sur ² ou T pour ouvrir la console système ]</div>
         </div>
 
-        <h2 class="section-title"><i class="fa-solid fa-fire"></i> LATEST TACTICAL CLIPS</h2>
-        <div class="cards-grid" id="content-grid-cs2"></div>
+        <div id="section-cs2" class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-fire"></i> LATEST TACTICAL CLIPS</h2>
+            <div class="cards-grid" id="content-grid-cs2"></div>
+        </div>
 
-        <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> OLD GAMES REPLAYS</h2>
-        <div class="cards-grid" id="content-grid-ut"></div>
+        <div id="section-ut" class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> OLD GAMES REPLAYS</h2>
+            <div class="cards-grid" id="content-grid-ut"></div>
+        </div>
 
     </div>
 
