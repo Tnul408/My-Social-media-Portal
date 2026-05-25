@@ -4,6 +4,9 @@ const YOUTUBE_CHANNELS = [
     { id: "UCQMGgEYYYBuGGgH1L1OGYPQ", type: "ut", subtitle: "Channel: Old Games Gameplay" }
 ];
 
+// Configuration API Google Cloud pour récupérer les vues
+const YT_API_KEY = "AIzaSyBePk6S-cPENbXedT01dGS3QL1c6iy-oo0"; 
+
 // Gestion de l'historique des commandes saisies dans le terminal (comme sous Linux)
 let commandHistory = [];
 let historyIndex = -1;
@@ -96,8 +99,10 @@ function attachAudioToElement(el) {
     el.addEventListener('click', playClickSound);
 }
 
-function initAudioFX() {
-    document.querySelectorAll('.link-btn, .tab-btn').forEach(el => attachAudioToElement(el));
+if (typeof initAudioFX === 'undefined') {
+    function initAudioFX() {
+        document.querySelectorAll('.link-btn, .tab-btn').forEach(el => attachAudioToElement(el));
+    }
 }
 
 // --- 3. EFFET HOLOGRAMME 3D (TILT) ---
@@ -177,7 +182,24 @@ function switchTab(type) {
     }
 }
 
-// --- 7. FLUX YOUTUBE SANS CACHE (CACHE BUSTER) ---
+// --- NOUVEAU : FONCTION AUXILIAIRE POUR FOCUS/AFFICHER LE TERMINAL ---
+function focusAndShowTerminal() {
+    const consoleContainer = document.getElementById('terminal-console');
+    const consoleInput = document.getElementById('term-input');
+    
+    if (consoleContainer) {
+        // Enlève la classe de masquage si elle est présente
+        consoleContainer.classList.remove('terminal-hidden');
+        
+        // Fait défiler la page de manière fluide jusqu'au terminal pour qu'il soit visible
+        consoleContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        
+        // Donne le focus au champ de saisie
+        setTimeout(() => { consoleInput?.focus(); }, 300);
+    }
+}
+
+// --- 7. FLUX YOUTUBE SANS CACHE, VUES REELLES & DOUBLE PARTAGE FLUIDE AUTOFOCUS ---
 async function displayContent() {
     const gridCs2 = document.getElementById('content-grid-cs2');
     const gridUt = document.getElementById('content-grid-ut');
@@ -205,10 +227,31 @@ async function displayContent() {
                         title: item.title,
                         subtitle: channel.subtitle,
                         link: item.link,
-                        image: item.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+                        id: videoId,
+                        image: item.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+                        views: "0" 
                     };
                 });
 
+                // Extraction des vues réelles via l'API officielle Google Cloud
+                if (channelItems.length > 0 && YT_API_KEY !== "REMPLACE_PAR_TA_CLE_API" && YT_API_KEY !== "") {
+                    const videoIdsString = channelItems.map(item => item.id).join(',');
+                    try {
+                        const statsResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoIdsString}&key=${YT_API_KEY}`);
+                        const statsData = await statsResponse.json();
+                        
+                        if (statsData.items) {
+                            statsData.items.forEach(statsItem => {
+                                const matchingVideo = channelItems.find(v => v.id === statsItem.id);
+                                if (matchingVideo) {
+                                    matchingVideo.views = parseInt(statsItem.statistics.viewCount).toLocaleString('fr-FR');
+                                }
+                            });
+                        }
+                    } catch (apiErr) { console.error("Erreur YouTube Stats API :", apiErr); }
+                }
+
+                // Génération des structures de cartes dynamiques
                 channelItems.forEach((item, index) => {
                     const card = document.createElement('a'); 
                     card.href = item.link; card.target = "_blank"; 
@@ -218,11 +261,55 @@ async function displayContent() {
                     card.innerHTML = `
                         <div class="thumbnail-placeholder" style="background-image: url('${item.image}'); background-size: cover; background-position: center;">
                             <span class="play-btn"><i class="fa-solid fa-play"></i></span>
+                            <div class="share-actions">
+                                <button class="action-btn link-share-btn" title="Copier le lien"><i class="fa-solid fa-link"></i></button>
+                                <button class="action-btn discord-share-btn" title="Partage Ultra-Fluide Discord"><i class="fa-brands fa-discord"></i></button>
+                            </div>
                         </div>
                         <div class="card-info">
                             <h3>${item.title}</h3>
-                            <p>${item.subtitle}</p>
+                            <div class="card-meta">
+                                <p>${item.subtitle}</p>
+                                <span class="video-views"><i class="fa-solid fa-eye"></i> ${item.views}</span>
+                            </div>
                         </div>`;
+                    
+                    // Action 1 : Copie rapide du lien + Focus Terminal
+                    const linkBtn = card.querySelector('.link-share-btn');
+                    linkBtn.addEventListener('click', (e) => {
+                        e.preventDefault(); e.stopPropagation(); 
+                        
+                        navigator.clipboard.writeText(item.link).then(() => {
+                            playTechBeep();
+                            focusAndShowTerminal(); // Affiche et descend jusqu'au terminal
+                            writeToTerminal(`[SYSTEM]: Link copied to clipboard -> ${item.title.substring(0, 30)}...`, "success-text");
+                            
+                            linkBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                            setTimeout(() => { linkBtn.innerHTML = `<i class="fa-solid fa-link"></i>`; }, 2000);
+                        }).catch(() => { writeToTerminal(`[ERROR]: Failed to copy link`, "error-text"); });
+                    });
+
+                    // Action 2 : Partage Discord + Copie automatique + Focus Terminal
+                    const discordBtn = card.querySelector('.discord-share-btn');
+                    discordBtn.addEventListener('click', (e) => {
+                        e.preventDefault(); e.stopPropagation(); 
+                        playClickSound();
+                        
+                        navigator.clipboard.writeText(item.link).then(() => {
+                            focusAndShowTerminal(); // Affiche et descend jusqu'au terminal
+                            writeToTerminal(`[STREAM]: Video link packed and cached into local memory.`, "success-text");
+                            writeToTerminal(`[DISCORD]: Initializing protocol... Press CTRL+V in your chat.`, "reply-text");
+                            
+                            window.location.href = `discord://-`; 
+                            
+                            setTimeout(() => {
+                                if (document.hasFocus()) {
+                                    const encodedMsg = encodeURIComponent(`Regarde ce POV CS2 : ${item.title} 🚀\n${item.link}`);
+                                    window.open(`https://discord.com/channels/@me?message=${encodedMsg}`, '_blank');
+                                }
+                            }, 400);
+                        });
+                    });
                     
                     targetGrid.appendChild(card);
                     attachAudioToElement(card);
@@ -245,7 +332,7 @@ function checkServerStatus() {
         .catch(() => { statusBadge.innerText = "OFFLINE"; statusBadge.classList.add("offline"); });
 }
 
-// --- 9. TERMINAL AVANCÉ ET NOUVELLES COMMANDES ---
+// --- 9. TERMINAL AVANCÉ ET COMMANDES ACCÈS NOYAU ---
 const consoleInput = document.getElementById('term-input');
 const consoleContainer = document.getElementById('terminal-console');
 const consoleHistory = document.getElementById('term-history');
@@ -256,6 +343,7 @@ window.addEventListener('keydown', (e) => {
         consoleContainer?.classList.toggle('terminal-hidden');
         if (!consoleContainer?.classList.contains('terminal-hidden')) {
             consoleInput?.focus(); playTechBeep();
+            consoleContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
     }
 });
@@ -271,7 +359,6 @@ if (consoleInput) {
                 consoleInput.value = "";
             }
         }
-        // Navigation historique commandes avec flèches haut / bas
         else if (e.key === 'ArrowUp') {
             if (historyIndex > 0) {
                 historyIndex--;
