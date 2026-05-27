@@ -315,3 +315,12 @@ body {
     box-shadow: 0 0 10px var(--neon-red, #ff0055);
 }
 .ut-logo-fix { filter: none !important; }
+.ut-logo-fix {
+    filter: none !important;
+    scale: 1.4;            /* Zoom de 140% sur le centre */
+    transform-origin: center; /* Assure que le zoom part bien du milieu */
+}
+.btn-cs2 .game-icon {
+    transform: scale(1.3); /* Zoom à 130% */
+    object-fit: cover;     /* Reste centré proprement */
+}
