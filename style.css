@@ -314,3 +314,4 @@ body {
     border-color: var(--neon-red, #ff0055);
     box-shadow: 0 0 10px var(--neon-red, #ff0055);
 }
+.ut-logo-fix { filter: none !important; }
