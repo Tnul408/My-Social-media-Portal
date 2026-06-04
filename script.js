@@ -285,3 +285,26 @@ clearSearchBtn.addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => { fetchYouTubeArchives(); });
+// Fonction pour réinitialiser globalement l'interface et les filtres
+function resetAllFilters() {
+    // 1. Remise à zéro des variables de filtres
+    currentSearchQuery = "";
+    activeQuickTag = "all";
+
+    // 2. Remise à zéro des éléments du DOM (Inputs et Selects)
+    mainSearch.value = "";
+    clearSearchBtn.style.display = "none";
+    
+    document.getElementById("filter-tournament").value = "all";
+    document.getElementById("filter-map").value = "all";
+    document.getElementById("filter-stage").value = "all";
+    document.getElementById("filter-sort").value = "desc"; // Revient au tri par défaut
+
+    // 3. Remise à zéro visuelle des boutons rapides (Active "Tous")
+    document.querySelectorAll(".filter-tag").forEach(btn => btn.classList.remove("active"));
+    const allBtn = Array.from(document.querySelectorAll(".filter-tag")).find(btn => btn.textContent.trim().toLowerCase() === "tous");
+    if (allBtn) allBtn.classList.add("active");
+
+    // 4. On relance le moteur de filtrage global
+    filterArchives();
+}
