@@ -226,3 +226,134 @@ body {
     background: var(--accent-light);
     color: var(--accent-color);
 }
+.advanced-filters {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.select-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--text-muted);
+    font-size: 13px;
+    pointer-events: none; /* Évite de bloquer le clic sur le menu */
+}
+
+.select-wrapper select {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 8px 36px 8px 36px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    outline: none;
+    appearance: none; /* Masque la flèche moche par défaut */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Flèche personnalisée à droite du menu */
+.select-wrapper::after {
+    content: "\f078";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 10px;
+    position: absolute;
+    right: 14px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.select-wrapper select:hover,
+.select-wrapper select:focus {
+    border-color: var(--text-main);
+}
+/* --- SYSTEME DE FAVORIS --- */
+.thumbnail-box {
+    position: relative; /* Indispensable pour placer l'étoile par-dessus */
+}
+
+.fav-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    color: #ffffff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.fav-btn:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.fav-btn.is-favorite {
+    color: #ffca28; /* Étoile jaune quand c'est favori */
+}
+
+/* --- SYSTEME ANTI-SPOILER --- */
+.spoiler-box {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.spoiler-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.spoiler-content {
+    font-size: 12px;
+    font-weight: 700;
+    background: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--text-main);
+    filter: blur(4px); /* Floute le score par défaut */
+    cursor: pointer;
+    transition: filter 0.2s ease, background 0.2s ease;
+    user-select: none;
+}
+
+/* Révèle le score au survol de la souris sur la zone du score */
+.spoiler-content:hover {
+    filter: blur(0);
+    background: var(--accent-light);
+    color: var(--accent-color);
+}
+
+/* Classe optionnelle si l'utilisateur clique dessus pour le laisser affiché */
+.spoiler-content.revealed {
+    filter: blur(0);
+    background: #e8f5e9;
+    color: #2e7d32;
+}
