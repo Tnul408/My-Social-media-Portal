@@ -22,12 +22,59 @@
         </div>
 
         <div class="quick-filters">
-            <span class="filter-label">Filtres rapides :</span>
-            <button class="filter-tag active" onclick="filterByQuickTag('all')">Tous</button>
-            <button class="filter-tag" onclick="filterByQuickTag('2014')">2014</button>
-            <button class="filter-tag" onclick="filterByQuickTag('EMS Katowice')">EMS Katowice</button>
-            <button class="filter-tag" onclick="filterByQuickTag('POV')">POVs</button>
-        </div>
+    <span class="filter-label">Filtres rapides :</span>
+    <button class="filter-tag active" onclick="filterByQuickTag('all')">Tous</button>
+    <button class="filter-tag" onclick="filterByQuickTag('2014')">2014</button>
+    <button class="filter-tag" onclick="filterByQuickTag('POV')">POVs</button>
+    <button class="filter-tag favorite-toggle-btn" onclick="filterByQuickTag('favorites')">
+        <i class="fa-solid fa-star" style="color: #ffca28; margin-right: 4px;"></i>Mes Favoris
+    </button>
+</div>
+</div>
+
+<!-- Nouvelle barre d'outils ergonomique pour les filtres avancés -->
+<div class="advanced-filters">
+    <div class="select-wrapper">
+        <i class="fa-solid fa-trophy select-icon"></i>
+        <select id="filter-tournament" onchange="handleAdvancedFilter()">
+            <option value="all">Tous les tournois</option>
+            <option value="EMS Katowice 2014">EMS One Katowice 2014</option>
+            <option value="DreamHack Winter 2013">DreamHack Winter 2013</option>
+            <option value="Cologne 2014">ESL One Cologne 2014</option>
+        </select>
+    </div>
+
+    <div class="select-wrapper">
+        <i class="fa-solid fa-map select-icon"></i>
+        <select id="filter-map" onchange="handleAdvancedFilter()">
+            <option value="all">Toutes les maps</option>
+            <option value="de_dust2">Dust II</option>
+            <option value="de_inferno">Inferno</option>
+            <option value="de_mirage">Mirage</option>
+            <option value="de_nuke">Nuke</option>
+            <option value="de_train">Train</option>
+            <option value="de_cache">Cache</option>
+        </select>
+    </div>
+    <div class="select-wrapper">
+    <i class="fa-solid fa-sort select-icon"></i>
+    <select id="filter-sort" onchange="handleAdvancedFilter()">
+        <option value="desc">Du plus récent au plus vieux</option>
+        <option value="asc">Du plus vieux au plus récent</option>
+        <option value="alpha">Ordre alphabétique (A-Z)</option>
+    </select>
+    </div>
+    <div class="select-wrapper">
+    <i class="fa-solid fa-diagram-project select-icon"></i>
+    <select id="filter-stage" onchange="handleAdvancedFilter()">
+        <option value="all">Toutes les étapes</option>
+        <option value="8th">8èmes de finale / Groupes</option>
+        <option value="quarter">Quarts de finale</option>
+        <option value="semi">Demi-finales</option>
+        <option value="final">Grandes Finales</option>
+    </select>
+    </div>
+</div>
     </div>
 
     <main class="archive-section">
